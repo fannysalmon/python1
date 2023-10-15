@@ -1,0 +1,173 @@
+'''In this tic-tac-toe, we'll assign a value to X and a O to sum the rows, columns and diagonals.'''
+
+SIZE = 3 # -> taille du plateau (2D)
+X = 9999 # -> valeur du pion X (arbitraire)
+O = 999 # -> valeur du pion O (arbitraire)
+
+"""
+class for displaying forground and style 
+(e.g. print(fg.RED + 'element' + fg.RESET) will give a red color, 
+We use fg.RESET to avoid impacting the rest.
+"""
+class fg:
+    BLACK   = '\033[30m'
+    RED     = '\033[31m'
+    GREEN   = '\033[32m'
+    YELLOW  = '\033[33m'
+    BLUE    = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN    = '\033[36m'
+    WHITE   = '\033[37m'
+    RESET   = '\033[39m'
+
+class style:
+    BRIGHT    = '\033[1m'
+    DIM       = '\033[2m'
+    NORMAL    = '\033[22m'
+    RESET_ALL = '\033[0m'
+    
+    
+"""
+function to display the symbol X or O 
+depending on its value, otherwise we display the element
+- f'{element} etc. ' will display <value of element> etc., it's a shorter notation
+- elif SIZE > 3 and element < 10: return f'{fg.RED}{style.DIM}0{element}{style.RESET_ALL}'
+this line is if ever the tray size is + 3 to display 01 and not shift as the numbers will be two digits long.
+"""
+def symbol(element):
+    if element == X: return 'X'
+    elif element == O: return 'O'
+    elif SIZE > 3 and element < 10: return f'{fg.RED}{style.DIM}0{element}{style.RESET_ALL}'
+    else : return f'{fg.RED}{style.DIM}{element}{style.RESET_ALL}'
+    
+
+"""
+function to display the tray (the matrix here)
+"""
+def affichage(matrix):
+    for ligne in matrix:
+        print("|", end="")
+        for element in ligne:
+            print(symbol(element), end="|")
+        print()
+    print()
+        
+"""
+function to obtain the 2D position of an element
+For example : 0 = (0,0) or 4 = (1,0)
+"""
+def getPlace(matrix, place):
+    cRow = -1
+    cCol = -1
+    count = -1
+    for row in matrix:
+        cRow += 1
+        cCol = -1
+        for e in row:
+            cCol += 1
+            count += 1
+            if count == place: 
+                return cRow, cCol
+
+"""
+function to add an X or O to the set 
+we take as argument : 
+- the matrix
+- the symbol is the value (of X and O) 
+- place in 1D for example: 1 or 6, which we'll convert to 2D
+"""
+def setSymbol(matrix, symbol, place):
+    x, y = getPlace(matrix, place)
+    matrix[x][y] = symbol
+    
+"""
+function for transposing a matrix
+"""
+def transpose(matrix):
+    return [[row[i] for row in matrix] for i in range(len(matrix[0]))]
+
+"""
+This function calculates the sum of the matrix diagonals
+Basically, we sum the values where the column is equal to the row for the main diagonal
+the same for the 2nd diagonal, but we loop backwards
+"""
+def sumOfDiagonals(matrix):
+    main_diagonal_sum = sum(matrix[i][i] for i in range(len(matrix)))
+    secondary_diagonal_sum = sum(matrix[i][len(matrix)-1-i] for i in range(len(matrix)))
+    return main_diagonal_sum, secondary_diagonal_sum
+        
+"""
+This function checks if there is a winner
+in MATRIX there will be the normal matrix and the transpose
+- first check if the sum of the matrix rows is SIZE*X (or O) 
+i.e. if there are 3 X's aligned in a row, we'll do X + X + X = 30 
+which is SIZE*X (assuming X = 10 and SIZE = 3)
+- then do the same with the transpose: the columns will then be the rows here
+- and we check the same for the sum of the two diagonals (with the same function as before).
+If we see that there's a winner, we review the value of the symbol
+otherwise -1 (just in case of error for debugging purposes, but not useful in the code) 
+"""
+def verification(matrix):
+    MATRIX = [matrix, transpose(matrix)]
+    for matrix in MATRIX:
+        for row in matrix:
+            Sum = 0
+            for e in row:
+                Sum += e
+                if Sum == SIZE*X: return X
+                elif Sum == SIZE*O: return O
+    sum1, sum2 = sumOfDiagonals(matrix)
+    if sum1 == SIZE*X or sum2 == SIZE*X: return X
+    elif sum1 == SIZE*O or sum2 == SIZE*O: return O 
+    return -1
+
+"""
+Function for changing to a higher number each time it is called :
+basically, you set it to 1 the 1st time you call it, the while True runs forever 
+except that yield allows you to pause it (so it stops there each time you call it).
+For example :
+if we set x = nextNumber() (x=1)
+x = next(x) (x=2)
+it will be used to generate a matrix such as [[1,2,3], [4,5,6], ...].
+"""
+def nextNumber():
+    num = 1
+    while True:
+        yield num
+        num += 1
+        
+"""
+Function to play the game :
+- set matrix according to SIZE defined above 
+here [ [] for i in range (x)] will generate a list with x list in it 
+- set notTaken in the same way, a list containing all possible places 
+if SIZE = 3 notTaken = [0,1,2,3,4,5,6,7,8]
+- current will be our current pawn, which will change at each turn (basically, if it's worth X, it becomes O, etc.).
+- we'll loop until our check returns neither the value O nor X (victory) or until notTaken is 'not empty' (equality) 
+- we'll display the matrix and ask the player to enter a value where he wants to place his pawn
+if it's not in the notTaken list, we'll ask again, otherwise we'll remove it from this list to avoid saying that the place is taken
+- finally ; we display who wins ! (or equality)
+"""
+def main():
+    gen = nextNumber()
+    matrix = [[next(gen) for i in range(SIZE)] for i in range(SIZE)]
+    notTaken = [i for i in range (SIZE*SIZE)]
+    current = X
+    while (verification(matrix) != O and verification(matrix) != X and notTaken != []):
+        if current == X: current = O
+        else: current = X
+        print("\nGAME:\n")
+        affichage(matrix)
+        place = input("player "+symbol(current)+" enter a location: ")
+        while (int(place)-1 not in notTaken):
+            place = input("Player "+symbol(current)+" enter a location not taken ")
+        notTaken.pop(notTaken.index(int(place)-1))
+        setSymbol(matrix, current, int(place)-1)
+    
+    print("\nFINAL:\n")
+    affichage(matrix)
+    if verification(matrix) == X: print(symbol(X)+" won !")  
+    elif verification(matrix) == O: print(symbol(O)+" won !") 
+    else: print("no winner")
+
+main()
