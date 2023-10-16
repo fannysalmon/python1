@@ -1,8 +1,8 @@
 '''In this tic-tac-toe, we'll assign a value to X and a O to sum the rows, columns and diagonals.'''
 
 SIZE = 3 # -> taille du plateau (2D)
-X = 10 # -> value of X (arbitrairy)
-O = 1 # -> value of O (arbitrairy)
+X = 999 # -> valeur du pion X (arbitraire)
+O = 9999 # -> valeur du pion O (arbitraire)
 
 """
 class for displaying forground and style 
