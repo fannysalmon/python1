@@ -1,22 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Oct 15 18:50:55 2023
-
-@author: Fanny
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Oct 13 12:51:16 2023
-
-@author: Fanny
-"""
-
 '''In this tic-tac-toe, we'll assign a value to X and a O to sum the rows, columns and diagonals.'''
 
 SIZE = 3 # -> taille du plateau (2D)
-X = 9999 # -> valeur du pion X (arbitraire)
-O = 999 # -> valeur du pion O (arbitraire)
+X = 10 # -> value of X (arbitrairy)
+O = 1 # -> value of O (arbitrairy)
 
 """
 class for displaying forground and style 
@@ -75,7 +61,7 @@ def affichage(matrix):
 input : matrix, number of the place in the matrix (1 to 6)
 process:
 function to obtain the 2D position of an element
-For example : 0 = (0,0) or 4 = (1,0)
+For example : 0 = (0,0)
 output: 2D position
 """
 def getPlace(matrix, place):
@@ -126,7 +112,7 @@ def sumOfDiagonals(matrix):
         
 """
 input : matrix
-process :
+output :
 This function checks if there is a winner
 in MATRIX there will be the normal matrix and the transpose
 - first check if the sum of the matrix rows is SIZE*X (or O) 
