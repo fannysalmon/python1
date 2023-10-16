@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Oct 15 18:50:55 2023
+
+@author: Fanny
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Oct 13 12:51:16 2023
+
+@author: Fanny
+"""
+
 '''In this tic-tac-toe, we'll assign a value to X and a O to sum the rows, columns and diagonals.'''
 
 SIZE = 3 # -> taille du plateau (2D)
@@ -29,10 +43,13 @@ class style:
     
 """
 function to display the symbol X or O 
+input : X or Y
+process :
 depending on its value, otherwise we display the element
 - f'{element} etc. ' will display <value of element> etc., it's a shorter notation
 - elif SIZE > 3 and element < 10: return f'{fg.RED}{style.DIM}0{element}{style.RESET_ALL}'
 this line is if ever the tray size is + 3 to display 01 and not shift as the numbers will be two digits long.
+output : X or Y
 """
 def symbol(element):
     if element == X: return 'X'
@@ -42,7 +59,9 @@ def symbol(element):
     
 
 """
-function to display the tray (the matrix here)
+input : matrix (list)
+outmut : function to display the tray (the matrix here)
+output : display of the game tic tac toe
 """
 def affichage(matrix):
     for ligne in matrix:
@@ -53,8 +72,11 @@ def affichage(matrix):
     print()
         
 """
+input : matrix, number of the place in the matrix (1 to 6)
+process:
 function to obtain the 2D position of an element
 For example : 0 = (0,0) or 4 = (1,0)
+output: 2D position
 """
 def getPlace(matrix, place):
     cRow = -1
@@ -70,8 +92,9 @@ def getPlace(matrix, place):
                 return cRow, cCol
 
 """
-function to add an X or O to the set 
-we take as argument : 
+function 
+procees : to add an X or O to the set 
+input : 
 - the matrix
 - the symbol is the value (of X and O) 
 - place in 1D for example: 1 or 6, which we'll convert to 2D
@@ -81,15 +104,20 @@ def setSymbol(matrix, symbol, place):
     matrix[x][y] = symbol
     
 """
-function for transposing a matrix
+input : matrix
+process : function for transposing a matrix
+output : transpose matrix
 """
 def transpose(matrix):
     return [[row[i] for row in matrix] for i in range(len(matrix[0]))]
 
 """
+input : matrix
+process:
 This function calculates the sum of the matrix diagonals
 Basically, we sum the values where the column is equal to the row for the main diagonal
 the same for the 2nd diagonal, but we loop backwards
+output : the main diagonal sum and the secondary diagonal sum
 """
 def sumOfDiagonals(matrix):
     main_diagonal_sum = sum(matrix[i][i] for i in range(len(matrix)))
@@ -97,6 +125,8 @@ def sumOfDiagonals(matrix):
     return main_diagonal_sum, secondary_diagonal_sum
         
 """
+input : matrix
+process :
 This function checks if there is a winner
 in MATRIX there will be the normal matrix and the transpose
 - first check if the sum of the matrix rows is SIZE*X (or O) 
@@ -106,6 +136,7 @@ which is SIZE*X (assuming X = 10 and SIZE = 3)
 - and we check the same for the sum of the two diagonals (with the same function as before).
 If we see that there's a winner, we review the value of the symbol
 otherwise -1 (just in case of error for debugging purposes, but not useful in the code) 
+output : X (if X won), O (if O won) or -1
 """
 def verification(matrix):
     MATRIX = [matrix, transpose(matrix)]
@@ -122,6 +153,7 @@ def verification(matrix):
     return -1
 
 """
+process :
 Function for changing to a higher number each time it is called :
 basically, you set it to 1 the 1st time you call it, the while True runs forever 
 except that yield allows you to pause it (so it stops there each time you call it).
@@ -137,6 +169,8 @@ def nextNumber():
         num += 1
         
 """
+input : the location
+process:
 Function to play the game :
 - set matrix according to SIZE defined above 
 here [ [] for i in range (x)] will generate a list with x list in it 
@@ -147,6 +181,7 @@ if SIZE = 3 notTaken = [0,1,2,3,4,5,6,7,8]
 - we'll display the matrix and ask the player to enter a value where he wants to place his pawn
 if it's not in the notTaken list, we'll ask again, otherwise we'll remove it from this list to avoid saying that the place is taken
 - finally ; we display who wins ! (or equality)
+output: the matrix and if X or 0 won or equality
 """
 def main():
     gen = nextNumber()
